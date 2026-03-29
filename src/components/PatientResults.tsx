@@ -99,7 +99,7 @@ const PatientResults = () => {
         </div>
 
         <div className="grid gap-8 xl:grid-cols-[minmax(0,1.15fr)_360px] xl:items-stretch">
-          <div className="min-h-[620px] overflow-hidden rounded-[32px] border border-primary/12 bg-card p-4 shadow-[0_24px_60px_-40px_rgba(28,61,48,0.45)] md:p-5">
+          <div className="overflow-hidden rounded-[32px] border border-primary/12 bg-card p-4 shadow-[0_24px_60px_-40px_rgba(28,61,48,0.45)] md:min-h-[620px] md:p-5">
             <AnimatePresence mode="wait">
               <motion.div
                 key={`${activeResult.id}-compare`}
@@ -109,7 +109,7 @@ const PatientResults = () => {
                 transition={panelTransition}
                 className="flex h-full flex-col"
               >
-                <div className="mb-4 flex items-center justify-between gap-3">
+                <div className="mb-4 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
                   <div>
                     <p className="text-xs font-semibold uppercase tracking-[0.28em] text-primary/70">
                       Before / After
@@ -118,14 +118,44 @@ const PatientResults = () => {
                       {activeResult.treatmentTitle}
                     </h3>
                   </div>
-                  <div className="rounded-full bg-primary/8 px-4 py-2 text-xs font-semibold uppercase tracking-[0.24em] text-primary">
+                  <div className="hidden rounded-full bg-primary/8 px-4 py-2 text-xs font-semibold uppercase tracking-[0.24em] text-primary md:inline-flex">
                     Drag to compare
+                  </div>
+                </div>
+
+                <div className="grid gap-4 md:hidden">
+                  <div className="overflow-hidden rounded-[28px] border border-border bg-secondary/35 p-3">
+                    <div className="mb-3 inline-flex rounded-full bg-foreground/80 px-3 py-1.5 text-[10px] font-semibold uppercase tracking-[0.24em] text-primary-foreground">
+                      Before
+                    </div>
+                    <div className="flex justify-center rounded-[22px] bg-background/70 p-2">
+                      <img
+                        src={activeResult.beforeImage}
+                        alt={`${activeResult.patientName} before result`}
+                        className="h-auto max-h-[420px] w-full rounded-[18px] object-contain"
+                        draggable={false}
+                      />
+                    </div>
+                  </div>
+
+                  <div className="overflow-hidden rounded-[28px] border border-border bg-secondary/35 p-3">
+                    <div className="mb-3 inline-flex rounded-full bg-white/90 px-3 py-1.5 text-[10px] font-semibold uppercase tracking-[0.24em] text-foreground">
+                      After
+                    </div>
+                    <div className="flex justify-center rounded-[22px] bg-background/70 p-2">
+                      <img
+                        src={activeResult.afterImage}
+                        alt={`${activeResult.patientName} after result`}
+                        className="h-auto max-h-[420px] w-full rounded-[18px] object-contain"
+                        draggable={false}
+                      />
+                    </div>
                   </div>
                 </div>
 
                 <div
                   ref={compareRef}
-                  className={`relative flex-1 overflow-hidden rounded-[28px] border border-border bg-secondary/40 select-none ${
+                  className={`relative hidden flex-1 overflow-hidden rounded-[28px] border border-border bg-secondary/40 select-none md:block ${
                     isDragging ? "cursor-ew-resize" : "cursor-col-resize"
                   }`}
                   style={{ aspectRatio: "16 / 10", touchAction: "none" }}
@@ -173,7 +203,7 @@ const PatientResults = () => {
             </AnimatePresence>
           </div>
 
-          <div className="min-h-[620px] rounded-[32px] border border-primary/12 bg-foreground p-6 text-primary-foreground shadow-[0_24px_60px_-40px_rgba(13,32,24,0.55)] md:p-8">
+          <div className="rounded-[32px] border border-primary/12 bg-foreground p-6 text-primary-foreground shadow-[0_24px_60px_-40px_rgba(13,32,24,0.55)] md:min-h-[620px] md:p-8">
             <AnimatePresence mode="wait">
               <motion.div
                 key={`${activeResult.id}-details`}

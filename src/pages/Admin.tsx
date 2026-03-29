@@ -33,6 +33,8 @@ const itemCardClassName =
 const highlightedCardClassName =
   "border-primary/45 shadow-[0_28px_64px_-38px_rgba(36,93,74,0.55)] ring-2 ring-primary/12";
 
+const LOCAL_SITE_DATA_KEY = "disha-clinic-site-data-v1";
+
 const createUniqueId = (prefix: string) =>
   `${prefix}-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`;
 
@@ -257,6 +259,27 @@ const Admin = () => {
     setSaveMessage("");
   };
 
+  const handleLoadBrowserBackup = () => {
+    try {
+      const raw = window.localStorage.getItem(LOCAL_SITE_DATA_KEY);
+      if (!raw) {
+        toast.error("No local browser backup was found on this device.");
+        return;
+      }
+
+      const parsed = JSON.parse(raw) as SiteData;
+      setDraftData({
+        ...defaultSiteData,
+        ...parsed,
+      });
+      toast.success("Loaded localhost browser content into the admin draft.");
+    } catch (error) {
+      const message =
+        error instanceof Error ? error.message : "Failed to load browser backup.";
+      toast.error(message);
+    }
+  };
+
   const handleLogout = async () => {
     await logout();
     toast.success("Logged out.");
@@ -302,6 +325,23 @@ const Admin = () => {
         </div>
 
         <section className={sectionClassName}>
+          <div className="mb-5 rounded-[24px] border border-primary/15 bg-primary/5 p-4 md:p-5">
+            <div className="flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
+              <div className="max-w-3xl">
+                <h2 className="text-xl font-bold text-foreground">Sync Localhost To Live</h2>
+                <p className="mt-2 text-sm leading-6 text-muted-foreground">
+                  If your localhost site shows older browser-only images or content, load that browser backup here and then click Save Changes to push the same data to the live website.
+                </p>
+              </div>
+              <button
+                type="button"
+                onClick={handleLoadBrowserBackup}
+                className="inline-flex items-center justify-center rounded-full border border-primary/20 bg-background px-5 py-3 text-sm font-semibold text-primary transition-all duration-300 hover:-translate-y-0.5 hover:bg-primary hover:text-primary-foreground"
+              >
+                Load Local Browser Backup
+              </button>
+            </div>
+          </div>
           <h2 className="mb-5 text-2xl font-bold">Clinic Basics</h2>
           <p className="mb-5 text-sm leading-7 text-muted-foreground">
             {isRemoteContentEnabled

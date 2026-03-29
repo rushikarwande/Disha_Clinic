@@ -14,7 +14,7 @@ type AuthContextValue = {
   isConfigured: boolean;
   login: (email: string, password: string) => Promise<void>;
   logout: () => Promise<void>;
-  refreshUser: () => Promise<void>;
+  refreshUser: () => Promise<Models.User<Models.Preferences> | null>;
 };
 
 const AuthContext = createContext<AuthContextValue | null>(null);
@@ -27,15 +27,17 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     if (!isAppwriteConfigured) {
       setUser(null);
       setIsLoading(false);
-      return;
+      return null;
     }
 
     setIsLoading(true);
     try {
       const currentUser = await appwriteAccount.get();
       setUser(currentUser);
+      return currentUser;
     } catch {
       setUser(null);
+      return null;
     } finally {
       setIsLoading(false);
     }
@@ -47,7 +49,13 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
   const login = async (email: string, password: string) => {
     await appwriteAccount.createEmailPasswordSession({ email, password });
-    await refreshUser();
+    const currentUser = await refreshUser();
+
+    if (!currentUser) {
+      throw new Error(
+        "Login session was created, but the user session could not be verified. Check the Appwrite web app hostname and cookie settings.",
+      );
+    }
   };
 
   const logout = async () => {

@@ -118,54 +118,24 @@ const PatientResults = () => {
                       {activeResult.treatmentTitle}
                     </h3>
                   </div>
-                  <div className="hidden rounded-full bg-primary/8 px-4 py-2 text-xs font-semibold uppercase tracking-[0.24em] text-primary md:inline-flex">
+                  <div className="inline-flex self-start rounded-full bg-primary/8 px-4 py-2 text-xs font-semibold uppercase tracking-[0.24em] text-primary">
                     Drag to compare
-                  </div>
-                </div>
-
-                <div className="grid gap-4 md:hidden">
-                  <div className="overflow-hidden rounded-[28px] border border-border bg-secondary/35 p-3">
-                    <div className="mb-3 inline-flex rounded-full bg-foreground/80 px-3 py-1.5 text-[10px] font-semibold uppercase tracking-[0.24em] text-primary-foreground">
-                      Before
-                    </div>
-                    <div className="flex justify-center rounded-[22px] bg-background/70 p-2">
-                      <img
-                        src={activeResult.beforeImage}
-                        alt={`${activeResult.patientName} before result`}
-                        className="h-auto max-h-[420px] w-full rounded-[18px] object-contain"
-                        draggable={false}
-                      />
-                    </div>
-                  </div>
-
-                  <div className="overflow-hidden rounded-[28px] border border-border bg-secondary/35 p-3">
-                    <div className="mb-3 inline-flex rounded-full bg-white/90 px-3 py-1.5 text-[10px] font-semibold uppercase tracking-[0.24em] text-foreground">
-                      After
-                    </div>
-                    <div className="flex justify-center rounded-[22px] bg-background/70 p-2">
-                      <img
-                        src={activeResult.afterImage}
-                        alt={`${activeResult.patientName} after result`}
-                        className="h-auto max-h-[420px] w-full rounded-[18px] object-contain"
-                        draggable={false}
-                      />
-                    </div>
                   </div>
                 </div>
 
                 <div
                   ref={compareRef}
-                  className={`relative hidden flex-1 overflow-hidden rounded-[28px] border border-border bg-secondary/40 select-none md:block ${
+                  className={`relative aspect-[4/5] flex-1 overflow-hidden rounded-[28px] border border-border bg-secondary/40 select-none md:aspect-[16/10] ${
                     isDragging ? "cursor-ew-resize" : "cursor-col-resize"
                   }`}
-                  style={{ aspectRatio: "16 / 10", touchAction: "none" }}
+                  style={{ touchAction: "none" }}
                   onPointerDown={handlePointerDown}
                   onPointerMove={handlePointerMove}
                 >
                   <img
                     src={activeResult.afterImage}
                     alt={`${activeResult.patientName} after result`}
-                    className="absolute inset-0 h-full w-full object-cover"
+                    className="absolute inset-0 h-full w-full object-contain"
                     draggable={false}
                   />
 
@@ -176,7 +146,7 @@ const PatientResults = () => {
                     <img
                       src={activeResult.beforeImage}
                       alt={`${activeResult.patientName} before result`}
-                      className="absolute inset-0 h-full w-full max-w-none object-cover"
+                      className="absolute inset-0 h-full w-full max-w-none object-contain"
                       style={{ width: `${10000 / Math.max(comparePosition, 1)}%` }}
                       draggable={false}
                     />

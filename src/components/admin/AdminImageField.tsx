@@ -98,6 +98,11 @@ const AdminImageField = ({
   const [offsetX, setOffsetX] = useState(0);
   const [offsetY, setOffsetY] = useState(0);
   const [imageRatio, setImageRatio] = useState<number | null>(null);
+  const [isPreviewLoading, setIsPreviewLoading] = useState(Boolean(image));
+
+  useEffect(() => {
+    setIsPreviewLoading(Boolean(image));
+  }, [image]);
 
   useEffect(() => {
     if (!draftSourceUrl) {
@@ -245,7 +250,7 @@ const AdminImageField = ({
         </div>
 
         <div
-          className={`overflow-hidden rounded-[20px] border border-border bg-secondary/40 ${
+          className={`relative overflow-hidden rounded-[20px] border border-border bg-secondary/40 ${
             preserveOriginalRatio ? "p-3" : previewHeightClassName
           }`}
         >
@@ -254,6 +259,8 @@ const AdminImageField = ({
               <img
                 src={image}
                 alt={label}
+                onLoad={() => setIsPreviewLoading(false)}
+                onError={() => setIsPreviewLoading(false)}
                 className={
                   preserveOriginalRatio
                     ? "h-auto max-h-[520px] w-full rounded-[16px] object-contain"
@@ -264,6 +271,15 @@ const AdminImageField = ({
           ) : (
             <div className={`flex items-center justify-center text-sm text-muted-foreground ${preserveOriginalRatio ? "min-h-[220px]" : "h-full"}`}>
               No image selected.
+            </div>
+          )}
+
+          {(isUploading || isPreviewLoading) && (
+            <div className="absolute inset-0 flex flex-col items-center justify-center gap-2 bg-background/75 backdrop-blur-[2px]">
+              <Loader2 className="h-6 w-6 animate-spin text-primary" />
+              <p className="text-sm font-medium text-foreground">
+                {isUploading ? "Uploading image..." : "Loading image..."}
+              </p>
             </div>
           )}
         </div>
